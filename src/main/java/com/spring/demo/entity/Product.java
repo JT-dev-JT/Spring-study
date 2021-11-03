@@ -3,11 +3,13 @@ package com.spring.demo.entity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.PrimitiveIterator;
 @Getter
 @Setter
 @ToString
+@Document(collection  = "products")
 public class Product {
     private String id;
     private String name;

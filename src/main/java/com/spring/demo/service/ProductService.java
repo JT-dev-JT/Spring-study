@@ -5,6 +5,7 @@ import com.spring.demo.exception.NotFoundException;
 import com.spring.demo.exception.UnprocessableEntityException;
 import com.spring.demo.parameter.ProductQueryParameter;
 import com.spring.demo.repository.MockProductDAO;
+import com.spring.demo.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,24 +13,23 @@ import java.util.List;
 @Service
 public class ProductService {
     @Autowired
-    MockProductDAO productDAO;
+    private ProductRepository repository;
 
     public Product createProduct (Product request){
-        boolean isIdDuplicated = productDAO.find(request.getId()).isPresent();
+        boolean isIdDuplicated = repository.findById(request.getId()).isPresent();
 
         if(isIdDuplicated){
             throw new UnprocessableEntityException("The id Of the Product is duplicated");
         }
 
         Product product = new Product();
-        product.setId(request.getId());
         product.setName(request.getName());
         product.setPrice(request.getPrice());
-        return productDAO.insert(product);
+        return repository.insert(product);
     }
 
     public Product getProduct(String id){
-        return productDAO.find(id).orElseThrow(()->new NotFoundException("Cannot find product"));
+        return repository.findById(id).orElseThrow(()->new NotFoundException("Can't find product."));
     }
 
     public Product replaceProduct(String id , Product request){
