@@ -41,7 +41,7 @@ private ProductService productService;
 
     @GetMapping
     public ResponseEntity<List<Product>>getProducts(@ModelAttribute ProductQueryParameter param){
-            List<Product> productList = productService.getPorduct(param);
+            List<Product> productList = productService.getProducts(param);
             return ResponseEntity.ok().body(productList);
     }
 
