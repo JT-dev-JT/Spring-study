@@ -57,7 +57,7 @@ public class ProductService {
     public List<Product> getProducts (ProductQueryParameter param){
         String keyword = Optional.ofNullable(param.getKeyword()).orElse("");
         int priceFrom = Optional.ofNullable(param.getPriceFrom()).orElse(0);
-        int priceTo = Optional.ofNullable(param.getPriceTo()).orElse(0);
+        int priceTo = Optional.ofNullable(param.getPriceTo()).orElse(Integer.MAX_VALUE);
 
         Sort sort =genSortingStrategy(param.getOrderBy(), param.getSortRule());
 

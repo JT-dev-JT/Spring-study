@@ -2,8 +2,10 @@ package com.spring.demo;
 
 import com.spring.demo.entity.Product;
 import com.spring.demo.repository.ProductRepository;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,13 +13,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -114,6 +124,7 @@ public class ProductTest {
     public void testDeleteProduct() throws Exception {
         Product product = createProduct("Economics", 450);
         productRepository.insert(product);
+        System.out.println(product.getId());
 
         mockMvc.perform(delete("/products/" + product.getId())
                         .headers(httpHeaders))
@@ -121,6 +132,45 @@ public class ProductTest {
 
         productRepository.findById(product.getId())
                 .orElseThrow(RuntimeException::new);
+
     }
 
+
+    @Test
+    public void testSearchProductsSortByPriceAsc() throws Exception {
+        Product p1 = createProduct("Operation Management", 350);
+        Product p2 = createProduct("Marketing Management", 200);
+        Product p3 = createProduct("Human Resource Management", 420);
+        Product p4 = createProduct("Finance Management", 400);
+        Product p5 = createProduct("Enterprise Resource Planning", 440);
+        productRepository.insert(Arrays.asList(p1, p2, p3, p4, p5));
+
+       MvcResult result = mockMvc.perform(get("/products")
+               .headers(httpHeaders)
+               .param("keyword", "Manage")
+               .param("orderBy", "price")
+               .param("sortRule", "asc"))
+               .andReturn();
+        MockHttpServletResponse mockHttpServletResponse = result.getResponse();
+        String responseJSONStr = mockHttpServletResponse.getContentAsString();
+        JSONArray productJSONArray = new JSONArray(responseJSONStr);
+
+        List<String> productIds = new ArrayList<>();
+        for (int i=0 ; i<productJSONArray.length(); i++){
+            JSONObject productJSON = productJSONArray.getJSONObject(i);
+            productIds.add(productJSON.getString("id"));
+        }
+
+        Assert.assertEquals(4,productIds.size());
+        Assert.assertEquals(p2.getId(),productIds.get(0));
+        Assert.assertEquals(p1.getId(),productIds.get(1));
+        Assert.assertEquals(p4.getId(),productIds.get(2));
+        Assert.assertEquals(p3.getId(),productIds.get(3));
+
+        Assert.assertEquals(HttpStatus.OK.value(),mockHttpServletResponse.getStatus());
+        Assert.assertEquals(MediaType.APPLICATION_JSON_VALUE,mockHttpServletResponse.getHeader(HttpHeaders.CONTENT_TYPE));
+
+
+
+    }
 }
