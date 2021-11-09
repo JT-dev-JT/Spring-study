@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -170,7 +169,30 @@ public class ProductTest {
         Assert.assertEquals(HttpStatus.OK.value(),mockHttpServletResponse.getStatus());
         Assert.assertEquals(MediaType.APPLICATION_JSON_VALUE,mockHttpServletResponse.getHeader(HttpHeaders.CONTENT_TYPE));
 
+    }
+    @Test
+    public void get400WhenCreateProductWithEmptyName()throws Exception{
+        JSONObject reqest = new JSONObject()
+                .put("name","")
+                .put("price","350");
 
+        mockMvc.perform(post("/products")
+                .headers(httpHeaders)
+                .content(reqest.toString()))
+                .andExpect(status().isBadRequest());
+    }
 
+    @Test
+    public void get400WhenReplaceProductWithNegativePrice()throws Exception{
+        Product product= createProduct("Computer Science",350);
+
+        JSONObject request = new JSONObject()
+                .put("name","Computer Science")
+                .put("price",-100);
+
+        mockMvc.perform(put("/products/"+product.getId())
+                .headers(httpHeaders)
+                .content(request.toString()))
+                .andExpect(status().isBadRequest());
     }
 }

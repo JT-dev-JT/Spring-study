@@ -5,6 +5,8 @@ import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
 import java.util.PrimitiveIterator;
 @Getter
 @Setter
@@ -12,7 +14,9 @@ import java.util.PrimitiveIterator;
 @Document(collection  = "products")
 public class Product {
     private String id;
+    @NotEmpty
     private String name;
+    @Min(0)
     private int price;
 
     public Product() {

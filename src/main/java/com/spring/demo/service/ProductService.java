@@ -1,6 +1,7 @@
 package com.spring.demo.service;
 
 import com.spring.demo.entity.Product;
+import com.spring.demo.entity.ProductRequest;
 import com.spring.demo.exception.NotFoundException;
 import com.spring.demo.exception.UnprocessableEntityException;
 import com.spring.demo.parameter.ProductQueryParameter;
@@ -19,7 +20,7 @@ public class ProductService {
     @Autowired
     private ProductRepository repository;
 
-    public Product createProduct(Product request) {
+    public Product createProduct(ProductRequest  request) {
         Product product = new Product();
         product.setName(request.getName());
         product.setPrice(request.getPrice());
@@ -31,7 +32,7 @@ public class ProductService {
                 .orElseThrow(() -> new NotFoundException("Can't find product."));
     }
 
-    public Product replaceProduct(String id, Product request) {
+    public Product replaceProduct(String id, ProductRequest request) {
         Product oldproduct = getProduct(id);
         Product product = new Product();
         product.setId(oldproduct.getId());
