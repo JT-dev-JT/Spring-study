@@ -6,7 +6,6 @@ import com.spring.demo.entity.ProductResponse;
 import com.spring.demo.parameter.ProductQueryParameter;
 import com.spring.demo.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +14,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.*;
-import java.util.stream.Collectors;
+
 
 @RestController
 @RequestMapping(value="/products", produces = MediaType.APPLICATION_JSON_VALUE)
