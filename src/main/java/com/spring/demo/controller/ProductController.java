@@ -2,6 +2,7 @@ package com.spring.demo.controller;
 
 import com.spring.demo.entity.Product;
 import com.spring.demo.entity.ProductRequest;
+import com.spring.demo.entity.ProductResponse;
 import com.spring.demo.parameter.ProductQueryParameter;
 import com.spring.demo.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,15 +43,15 @@ private ProductService productService;
 
 
     @GetMapping
-    public ResponseEntity<List<Product>>getProducts(@ModelAttribute ProductQueryParameter param){
-            List<Product> productList = productService.getProducts(param);
+    public ResponseEntity<List<ProductResponse>>getProducts(@ModelAttribute ProductQueryParameter param){
+            List<ProductResponse> productList = productService.getProducts(param);
             return ResponseEntity.ok().body(productList);
     }
 
     @PostMapping
-    public ResponseEntity<Product> createProduct(@Valid @RequestBody ProductRequest request) {
+    public ResponseEntity<ProductResponse> createProduct(@Valid @RequestBody ProductRequest request) {
 
-        Product product = productService.createProduct(request);
+        ProductResponse product = productService.createProduct(request);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -62,9 +63,9 @@ private ProductService productService;
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Product> replaceProduct(
+    public ResponseEntity<ProductResponse> replaceProduct(
             @PathVariable("id") String id, @Valid @RequestBody ProductRequest  request){
-            Product product = productService.replaceProduct(id,request);
+            ProductResponse product = productService.replaceProduct(id,request);
             return ResponseEntity.ok().body(product);
     }
 

@@ -1,11 +1,11 @@
 package com.spring.demo.service;
 
+import com.spring.demo.converter.ProductConverter;
 import com.spring.demo.entity.Product;
 import com.spring.demo.entity.ProductRequest;
+import com.spring.demo.entity.ProductResponse;
 import com.spring.demo.exception.NotFoundException;
-import com.spring.demo.exception.UnprocessableEntityException;
 import com.spring.demo.parameter.ProductQueryParameter;
-import com.spring.demo.repository.MockProductDAO;
 import com.spring.demo.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -14,17 +14,24 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-@Service
 public class ProductService {
-    @Autowired
+
+
     private ProductRepository repository;
 
-    public Product createProduct(ProductRequest  request) {
+    public ProductService(ProductRepository repository ) {
+        this.repository=repository;
+    }
+
+    public ProductResponse createProduct(ProductRequest  request) {
         Product product = new Product();
         product.setName(request.getName());
         product.setPrice(request.getPrice());
-        return repository.insert(product);
+        product= repository.insert(product);
+
+        return  ProductConverter.toProductResponse(product);
     }
 
     public Product getProduct(String id) {
@@ -32,13 +39,21 @@ public class ProductService {
                 .orElseThrow(() -> new NotFoundException("Can't find product."));
     }
 
-    public Product replaceProduct(String id, ProductRequest request) {
-        Product oldproduct = getProduct(id);
+    public ProductResponse getProductResponse(String id){
+        Product product=getProduct(id);
+        return ProductConverter.toProductResponse(product);
+
+    }
+
+    public ProductResponse replaceProduct(String id, ProductRequest request) {
+        Product oldProduct = getProduct(id);
         Product product = new Product();
-        product.setId(oldproduct.getId());
+        product.setId(oldProduct.getId());
         product.setName(request.getName());
         product.setPrice(request.getPrice());
-        return repository.save(product);
+        product= repository.save(product);
+
+        return ProductConverter.toProductResponse(product);
     }
 
     public void deleteProduct(String id) {
@@ -55,13 +70,15 @@ public class ProductService {
     }
 
 
-    public List<Product> getProducts (ProductQueryParameter param){
+    public List<ProductResponse> getProducts (ProductQueryParameter param){
         String keyword = Optional.ofNullable(param.getKeyword()).orElse("");
         int priceFrom = Optional.ofNullable(param.getPriceFrom()).orElse(0);
         int priceTo = Optional.ofNullable(param.getPriceTo()).orElse(Integer.MAX_VALUE);
 
         Sort sort =genSortingStrategy(param.getOrderBy(), param.getSortRule());
 
-        return repository.findByPriceBetweenAndNameLikeIgnoreCase(priceFrom, priceTo, keyword, sort);
+        List<Product> productList= repository.findByPriceBetweenAndNameLikeIgnoreCase(priceFrom, priceTo, keyword, sort);
+
+        return  productList.stream().map(ProductConverter::toProductResponse).collect(Collectors.toList());
     }
 }
