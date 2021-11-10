@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotEmpty;
+import java.util.List;
+
 @Getter
 @Setter
 public class SendMailRequest {
@@ -15,7 +17,7 @@ public class SendMailRequest {
     private String content;
 
     @NotEmpty
-    private String [] receivers;
+    private List<String> receivers;
 
 
 
