@@ -22,6 +22,7 @@ public class MailService {
     private final String LOG_EMAIL;
 
 
+
     public MailService(JavaMailSenderImpl mailSender){
         this.mailSender=mailSender;
         this.tag=System.currentTimeMillis();

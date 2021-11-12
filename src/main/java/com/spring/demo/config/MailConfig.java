@@ -5,12 +5,12 @@ import lombok.Getter;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.context.properties.ConfigurationPropertiesBean;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.*;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.annotation.RequestScope;
 
 import java.util.Properties;
 
@@ -59,7 +59,6 @@ public class MailConfig {
 
 
     @Bean
-    @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
     public MailService mailService(){
         JavaMailSenderImpl mailSender = "gmail".equals(platform)
                 ? gmailSender()
