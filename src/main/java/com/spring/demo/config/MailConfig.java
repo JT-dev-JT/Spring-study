@@ -2,10 +2,14 @@ package com.spring.demo.config;
 
 import com.spring.demo.service.MailService;
 import lombok.Getter;
+import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.boot.context.properties.ConfigurationPropertiesBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.Scope;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import java.util.Properties;
@@ -55,6 +59,7 @@ public class MailConfig {
 
 
     @Bean
+    @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
     public MailService mailService(){
         JavaMailSenderImpl mailSender = "gmail".equals(platform)
                 ? gmailSender()
@@ -64,6 +69,8 @@ public class MailConfig {
         props.put("mail.smtp.auth", authEnabled);
         props.put("mail.smtp.starttls.enable", starttlsEnabled);
         props.put("mail.transport.protocol", protocol);
+
+        System.out.println("Mail Service");
         return new MailService(mailSender);
 
     }
