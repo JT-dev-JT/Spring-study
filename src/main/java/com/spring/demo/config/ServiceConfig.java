@@ -1,14 +1,12 @@
 package com.spring.demo.config;
 
-import com.spring.demo.entity.Product;
+import com.spring.demo.repository.AppUserRepository;
 import com.spring.demo.repository.ProductRepository;
+import com.spring.demo.service.AppUserService;
 import com.spring.demo.service.MailService;
 import com.spring.demo.service.ProductService;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
 
 @Configuration
 public class ServiceConfig {
@@ -19,6 +17,10 @@ public class ServiceConfig {
         return new ProductService(repository);
     }
 
+    @Bean
+    public AppUserService appUserService(AppUserRepository repository){
+        return new AppUserService(repository);
+    }
 
 
 }

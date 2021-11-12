@@ -1,6 +1,6 @@
 package com.spring.demo.repository;
 
-import com.spring.demo.entity.Product;
+import com.spring.demo.entity.product.Product;
 import com.spring.demo.parameter.ProductQueryParameter;
 import org.springframework.stereotype.Repository;
 

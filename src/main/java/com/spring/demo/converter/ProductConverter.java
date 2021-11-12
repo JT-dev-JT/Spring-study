@@ -1,8 +1,8 @@
 package com.spring.demo.converter;
 
-import com.spring.demo.entity.Product;
-import com.spring.demo.entity.ProductRequest;
-import com.spring.demo.entity.ProductResponse;
+import com.spring.demo.entity.product.Product;
+import com.spring.demo.entity.product.ProductRequest;
+import com.spring.demo.entity.product.ProductResponse;
 
 public class ProductConverter {
     private ProductConverter(){}

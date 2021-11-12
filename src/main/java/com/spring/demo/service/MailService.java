@@ -1,6 +1,6 @@
 package com.spring.demo.service;
 
-import com.spring.demo.entity.SendMailRequest;
+import com.spring.demo.entity.mail.SendMailRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mail.MailAuthenticationException;

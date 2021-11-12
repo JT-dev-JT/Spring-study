@@ -1,4 +1,4 @@
-package com.spring.demo.entity;
+package com.spring.demo.entity.mail;
 
 import lombok.Getter;
 import lombok.Setter;

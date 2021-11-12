@@ -1,8 +1,8 @@
 package com.spring.demo.controller;
 
-import com.spring.demo.entity.Product;
-import com.spring.demo.entity.ProductRequest;
-import com.spring.demo.entity.ProductResponse;
+import com.spring.demo.entity.product.Product;
+import com.spring.demo.entity.product.ProductRequest;
+import com.spring.demo.entity.product.ProductResponse;
 import com.spring.demo.parameter.ProductQueryParameter;
 import com.spring.demo.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
