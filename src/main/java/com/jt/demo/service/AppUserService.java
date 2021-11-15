@@ -7,6 +7,7 @@ import com.jt.demo.repository.AppUserRepository;
 import com.jt.demo.converter.AppUserConverter;
 import com.jt.demo.exception.NotFoundException;
 import com.jt.demo.exception.UnprocessableEntityException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,9 +15,11 @@ import java.util.Optional;
 public class AppUserService {
 
     private AppUserRepository repository;
+    private BCryptPasswordEncoder passwordEncoder;
 
     public AppUserService(AppUserRepository repository) {
         this.repository = repository;
+        this.passwordEncoder=new BCryptPasswordEncoder();
     }
 
     public AppUserResponse createUser(AppUserRequest request) {
@@ -26,6 +29,7 @@ public class AppUserService {
         }
 
         AppUser user = AppUserConverter.toAppUser(request);
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
         user = repository.insert(user);
         return AppUserConverter.toAppUserResponse(user);
     }
