@@ -1,5 +1,9 @@
 package com.jt.demo.service;
 
+import com.jt.demo.aop.ActionType;
+import com.jt.demo.aop.EntityType;
+import com.jt.demo.aop.SendEmail;
+import com.jt.demo.auth.UserIdentity;
 import com.jt.demo.entity.product.Product;
 import com.jt.demo.entity.product.ProductRequest;
 import com.jt.demo.entity.product.ProductResponse;
@@ -18,6 +22,7 @@ public class ProductService {
 
     private ProductRepository repository;
     private MailService mailService;
+    private UserIdentity userIdentity;
 
     public ProductService(ProductRepository repository, MailService mailService) {
         this.repository = repository;
@@ -35,25 +40,29 @@ public class ProductService {
         return ProductConverter.toProductResponse(product);
     }
 
+    @SendEmail(entity = EntityType.PRODUCT,action = ActionType.CREATE)
     public ProductResponse createProduct(ProductRequest request) {
         Product product = ProductConverter.toProduct(request);
         product = repository.insert(product);
+        product.setCreator(userIdentity.getId());
 
         mailService.sendNewProductMail(product.getId());
 
         return ProductConverter.toProductResponse(product);
     }
-
+    @SendEmail(entity = EntityType.PRODUCT,action = ActionType.UPDATE,idParamIndex = 0)
     public ProductResponse replaceProduct(String id, ProductRequest request) {
         Product oldProduct = getProduct(id);
         Product newProduct = ProductConverter.toProduct(request);
         newProduct.setId(oldProduct.getId());
+        newProduct.setCreator(userIdentity.getId());
 
         repository.save(newProduct);
 
         return ProductConverter.toProductResponse(newProduct);
     }
 
+    @SendEmail(entity = EntityType.PRODUCT,action = ActionType.DELETE,idParamIndex = 0)
     public void deleteProduct(String id) {
         repository.deleteById(id);
         mailService.sendDeleteProductMail(id);

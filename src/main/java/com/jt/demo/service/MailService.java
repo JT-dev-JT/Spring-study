@@ -1,5 +1,6 @@
 package com.jt.demo.service;
 
+import com.jt.demo.auth.UserIdentity;
 import com.jt.demo.entity.mail.SendMailRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +16,7 @@ public class MailService {
 
     private final JavaMailSenderImpl mailSender;
     private final String LOG_EMAIL;
+    private UserIdentity userIdentity;
 
     public MailService(JavaMailSenderImpl mailSender) {
         this.mailSender = mailSender;
@@ -44,12 +46,12 @@ public class MailService {
     public void sendNewProductMail(String productId) {
         String content = String.format("There's a new created product (%s).", productId);
         sendMail("New Product", content,
-                Collections.singletonList(LOG_EMAIL));
+                Collections.singletonList(userIdentity.getEmail()));
     }
 
     public void sendDeleteProductMail(String productId) {
         String content = String.format("There's a product deleted (%s).", productId);
         sendMail("Product Deleted", content,
-                Collections.singletonList(LOG_EMAIL));
+                Collections.singletonList(userIdentity.getEmail()));
     }
 }

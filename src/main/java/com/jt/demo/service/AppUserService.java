@@ -1,5 +1,8 @@
 package com.jt.demo.service;
 
+import com.jt.demo.aop.ActionType;
+import com.jt.demo.aop.EntityType;
+import com.jt.demo.aop.SendEmail;
 import com.jt.demo.entity.app_user.AppUser;
 import com.jt.demo.entity.app_user.AppUserRequest;
 import com.jt.demo.entity.app_user.AppUserResponse;
@@ -21,7 +24,7 @@ public class AppUserService {
         this.repository = repository;
         this.passwordEncoder=new BCryptPasswordEncoder();
     }
-
+    @SendEmail(entity = EntityType.APP_USER,action = ActionType.CREATE)
     public AppUserResponse createUser(AppUserRequest request) {
         Optional<AppUser> existingUser = repository.findByEmailAddress(request.getEmailAddress());
         if (existingUser.isPresent()) {

@@ -27,7 +27,7 @@ public class SpringUserService implements UserDetailsService {
             List<SimpleGrantedAuthority> authorities =user.getAuthorities().stream()
                     .map(auth-> new SimpleGrantedAuthority(auth.name()))
                     .collect(Collectors.toList());
-            return new User(user.getName(),user.getPassword(), Collections.emptyList());
+            return new User(user.getName(),user.getPassword(), authorities);
         }catch(NotFoundException ex){
             throw new UsernameNotFoundException("Username is not wrong");
         }
